@@ -1,14 +1,7 @@
 {
   "name": "fl-routing",
-  "private": true,
   "version": "0.0.0",
-  "type": "module",
-  "main": "dist/index.cjs.js",
-  "module": "dist/index.es.js",
-  "types": "dist/main.d.ts",
-  "files": [
-    "/dist"
-  ],
+  "main": "lib/main.ts",
   "scripts": {
     "dev": "vite",
     "build_orig": "tsc -b && vite build",
