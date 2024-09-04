@@ -1,0 +1,15 @@
+{
+  "private": "true",
+  "name": "fl-new",
+  "version": "0.0.1",
+  "main": "index.js",
+  "license": "MIT",
+  "workspaces": [
+    "apps/*",
+    "libs/*"
+  ],
+  "devDependencies": {
+    "@types/node": "^22.5.3",
+    "vite-plugin-dts": "^4.1.0"
+  }
+}
