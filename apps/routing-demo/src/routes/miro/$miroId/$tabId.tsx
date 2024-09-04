@@ -1,8 +1,15 @@
 import { createFileRoute } from "@tanstack/react-router";
+// import { addTabProps } from "fl-routing";
 
-export const Route = createFileRoute("/miro/$miroId/$tabId")({
-  component: TabDisplay,
-});
+// const tabs = ["miro", "was", "here"] as const;
+
+export const Route = createFileRoute("/miro/$miroId/$tabId")(
+  // addTabProps(
+  {
+    component: TabDisplay,
+  }
+  //, "tabId", tabs)
+);
 
 function TabDisplay() {
   const params = Route.useParams();

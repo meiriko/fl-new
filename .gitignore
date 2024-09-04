@@ -62,3 +62,4 @@ local_**
 multi.gif
 circleDeps
 routeTree.gen.ts
+*.tsbuildinfo
