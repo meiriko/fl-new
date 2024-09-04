@@ -1,4 +1,9 @@
-import { redirect } from "@tanstack/react-router";
+import {
+  redirect,
+  Route,
+  useChildMatches,
+  useNavigate,
+} from "@tanstack/react-router";
 import _ from "lodash";
 
 type TabConfig = {
@@ -138,13 +143,19 @@ export function addTabProps<P, K extends string, T extends readonly string[]>(
   };
 }
 
-function navigateToDefaultTab(tabKey: string, defaultTab = "default") {
+/*
+function navigateToDefaultTabBefore(tabKey: string, defaultTab = "default") {
   return (config: {
     params: Record<string, string>;
     search: Record<string, unknown>;
     location: { pathname: string };
+    cause: string;
   }) => {
-    if (defaultTab && !config.params[tabKey]) {
+    if (
+      defaultTab &&
+      !config.params[tabKey] &&
+      !config.location.pathname.endsWith(defaultTab)
+    ) {
       throw redirect({
         to: `${config.location.pathname}/$${tabKey}`,
         params: { [tabKey]: defaultTab },
@@ -154,9 +165,34 @@ function navigateToDefaultTab(tabKey: string, defaultTab = "default") {
   };
 }
 
-export function toDefaultTabProps<T>(tabKey: string, defaultTab?: string) {
+
+function navigateToDefaultTab(tabKey: string, defaultTab = "default") {
+  return ({
+    route,
+    location,
+  }: {
+    route: { fullPath: string };
+    location: { pathname: string; search: Record<string, unknown> };
+  }) => {
+    if (route.fullPath === location.pathname) {
+      const result = redirect({
+        to: `${route.fullPath}/$${tabKey}`,
+        params: { [tabKey]: defaultTab },
+        search: location.search,
+      });
+      throw result;
+    }
+  };
+}
+
+function toDefaultTabProps<T>(tabKey: string, defaultTab?: string) {
   return {
-    beforeLoad: navigateToDefaultTab(tabKey, defaultTab),
+    gcTime: 0,
+    // beforeLoad: navigateToDefaultTabBefore(tabKey, defaultTab),
+    loader: navigateToDefaultTab(tabKey, defaultTab),
+    shouldReload: () => {
+      return true;
+    },
     params: {
       parse: (v: T): T => v,
       stringify: (v: T) => v,
@@ -173,4 +209,32 @@ export function addDefaultTabProps<P, T>(
     ...props,
     ...toDefaultTabProps<T>(tabKey, defaultTab),
   };
+}
+  */
+
+export function useDefaultTab(
+  route: Pick<Route, "useMatch" | "children">,
+  defaultTab = "default"
+) {
+  const children = useChildMatches();
+
+  const match = route.useMatch();
+  const navigate = useNavigate();
+  const search = match.search;
+
+  if (!children.length) {
+    const tabs = (route?.children as { path: string }[])
+      ?.map((c) => c.path)
+      ?.filter((p) => p.startsWith("$"));
+    if (tabs?.length) {
+      navigate({
+        from: match.pathname,
+        to: `${match.pathname}/${tabs[0]}`,
+        params: { [tabs[0].slice(1)]: defaultTab },
+        search,
+      });
+    }
+  } else {
+    return undefined;
+  }
 }
