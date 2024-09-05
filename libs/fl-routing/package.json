@@ -2,6 +2,7 @@
   "name": "fl-routing",
   "version": "0.0.0",
   "main": "lib/main.ts",
+  "type": "module",
   "scripts": {
     "dev": "vite",
     "build_orig": "tsc -b && vite build",
@@ -13,7 +14,8 @@
     "@tanstack/react-router": "^1.53.1",
     "lodash": "^4.17.21",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "react-dom": "^18.3.1",
+    "fl-routing-components": "*"
   },
   "devDependencies": {
     "@eslint/js": "^9.9.0",
