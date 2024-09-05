@@ -1,12 +1,9 @@
 {
-  "name": "routing-demo",
+  "name": "fl-components",
   "private": true,
   "version": "0.0.0",
-  "type": "module",
+  "main": "lib/main.ts",
   "scripts": {
-    "prebuild": "yarn generate-routes",
-    "generate-routes": "tsr generate",
-    "watch-routes": "tsr watch",
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
@@ -16,17 +13,12 @@
     "@chakra-ui/react": "^2.8.2",
     "@emotion/react": "^11.13.3",
     "@emotion/styled": "^11.13.0",
-    "@tanstack/react-router": "^1.53.1",
-    "fl-routing": "*",
-    "framer-motion": "^11.5.3",
+    "framer-motion": "^11.5.2",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.9.0",
-    "@tanstack/router-cli": "^1.52.0",
-    "@tanstack/router-devtools": "^1.53.1",
-    "@tanstack/router-plugin": "^1.52.0",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
     "@vitejs/plugin-react": "^4.3.1",
