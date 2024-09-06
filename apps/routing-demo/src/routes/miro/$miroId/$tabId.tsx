@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { addTabProps } from "@fl/routing";
 
-const tabs = ["miro", "was", "here"] as const;
+const tabs = ["snake", "was", "here"] as const;
 
 export const Route = createFileRoute("/miro/$miroId/$tabId")(
   addTabProps(

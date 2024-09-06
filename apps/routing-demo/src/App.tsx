@@ -30,7 +30,7 @@ function App() {
           </CustomLink>
           <CustomLink
             to="/miro/$miroId/$tabId"
-            params={{ miroId: "xx", tabId: "xx" }}
+            params={{ miroId: "xx", tabId: "here" }}
           >
             miro/xxx/xxx
           </CustomLink>
@@ -42,15 +42,15 @@ function App() {
           </CustomLink>
           <CustomLink
             to="/miro/$miroId/$tabId"
-            params={{ miroId: "yyy", tabId: "overview" }}
+            params={{ miroId: "yyy", tabId: "was" }}
           >
-            Miro yyy/overview
+            Miro yyy/was
           </CustomLink>
           <CustomLink
             to="/miro/$miroId/$tabId"
-            params={{ miroId: "yyy", tabId: "settings" }}
+            params={{ miroId: "yyy", tabId: "here" }}
           >
-            Miro yyy/settings
+            Miro yyy/here
           </CustomLink>
         </div>
         <div>root (App)</div>
