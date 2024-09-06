@@ -13,10 +13,26 @@ import {
 
 type LinkChildrenFN = Exclude<TanstackLinkProps["children"], React.ReactNode>;
 
+type ToParamsObjectType<TTo extends string> = Extract<
+  TanstackLinkOptions<RegisteredRouter, "", TTo & string>["params"],
+  Record<string, unknown>
+>;
+
+type MakeRequired<T> =
+  T extends Record<string, unknown> ? { [K in keyof T]-?: T[K] } : T;
+
+type ToParamsObjectOrReducer<T extends Record<string, unknown>> =
+  | T
+  | ((prev: Record<string, string>) => T);
+
 type ToParamsPropsType<TTo extends string | undefined> =
   ParsePathParams<TTo & string> extends never
     ? { params?: never }
-    : { params: Record<ParsePathParams<TTo & string>, string> };
+    : {
+        params: ToParamsObjectOrReducer<
+          MakeRequired<ToParamsObjectType<TTo & string>>
+        >;
+      };
 
 export type ChakraToTanstackLinkProps<TTo extends string | undefined> = Omit<
   Omit<TanstackLinkProps, "search" | "to"> &
