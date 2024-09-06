@@ -25,8 +25,12 @@ type ToParamsObjectOrReducer<T extends Record<string, unknown>> =
   | T
   | ((prev: Record<string, string>) => T);
 
-type ToParamsPropsType<TTo extends string | undefined> =
-  ParsePathParams<TTo & string> extends never
+type ToParamsPropsType<TTo extends string | undefined> = TTo extends
+  | undefined
+  | ""
+  | "."
+  ? { params?: ToParamsObjectOrReducer<Record<string, string>> }
+  : ParsePathParams<TTo & string> extends never
     ? { params?: never }
     : {
         params: ToParamsObjectOrReducer<
