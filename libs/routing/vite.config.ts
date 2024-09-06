@@ -10,7 +10,7 @@
 //     copyPublicDir: false,
 //     lib: {
 //       entry: resolve(__dirname, "lib/main.ts"),
-//       name: "fl-routing",
+//       name: "@fl/routing",
 //       formats: ["cjs", "es"],
 //     },
 //     rollupOptions: {
@@ -29,7 +29,7 @@ export default defineConfig({
   build: {
     lib: {
       entry: "./lib/main.ts",
-      name: "fl-routing",
+      name: "@fl/routing",
       fileName: (format) => `index.${format}.js`,
       formats: ["cjs", "es"],
     },

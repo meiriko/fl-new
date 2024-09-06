@@ -1,7 +1,7 @@
 import { Outlet } from "@tanstack/react-router";
 import { ChakraProvider } from "@chakra-ui/react";
-import { DemoButton } from "fl-components";
-import { FLLink } from "fl-routing-components";
+import { DemoButton } from "@fl/components";
+import { FLLink } from "@fl/routing-components";
 function CustomLink<TTo extends string | undefined>(
   props: React.ComponentProps<typeof FLLink<TTo>>
 ) {

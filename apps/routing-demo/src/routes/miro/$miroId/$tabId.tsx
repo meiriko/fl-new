@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-// import { addTabProps } from "fl-routing";
+// import { addTabProps } from "@fl/routing";
 
 // const tabs = ["miro", "was", "here"] as const;
 

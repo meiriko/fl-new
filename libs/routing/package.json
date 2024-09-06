@@ -1,25 +1,18 @@
 {
-  "name": "@fl/routing-demo",
-  "private": true,
+  "name": "@fl/routing",
   "version": "0.0.0",
+  "main": "lib/main.ts",
   "type": "module",
   "scripts": {
-    "prebuild": "yarn generate-routes",
-    "generate-routes": "tsr generate",
-    "watch-routes": "tsr watch",
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build_orig": "tsc -b && vite build",
+    "build": "tsc --p ./tsconfig.lib.json && vite build",
     "lint": "eslint .",
     "preview": "vite preview"
   },
   "dependencies": {
-    "@chakra-ui/react": "^2.8.2",
-    "@emotion/react": "^11.13.3",
-    "@emotion/styled": "^11.13.0",
     "@tanstack/react-router": "^1.53.1",
-    "@fl/routing": "*",
-    "@fl/routing-components": "*",
-    "framer-motion": "^11.5.3",
+    "lodash": "^4.17.21",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },
@@ -28,6 +21,7 @@
     "@tanstack/router-cli": "^1.52.0",
     "@tanstack/router-devtools": "^1.53.1",
     "@tanstack/router-plugin": "^1.52.0",
+    "@types/lodash": "^4.17.7",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
     "@vitejs/plugin-react": "^4.3.1",
@@ -38,5 +32,11 @@
     "typescript": "^5.5.3",
     "typescript-eslint": "^8.0.1",
     "vite": "^5.4.1"
+  },
+  "peerDependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "lodash": "^4.17.21",
+    "@tanstack/react-router": "^1.53.1"
   }
 }

@@ -1,5 +1,5 @@
 import { createFileRoute, Outlet } from "@tanstack/react-router";
-import { useDefaultTab } from "fl-routing";
+import { useDefaultTab } from "@fl/routing";
 
 export const Route = createFileRoute("/miro/$miroId")({
   component: MiroDisplay,

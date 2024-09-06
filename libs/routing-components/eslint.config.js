@@ -28,9 +28,9 @@ export default tseslint.config(
         {
           patterns: [
             {
-              group: ["fl-*"],
+              group: ["@fl/*"],
               message:
-                "fl-components is a low level library, it should not import other fl-* libraries",
+                "@fl/routing-components is a low level library, it should not import other @fl/* libraries",
             },
           ],
         },
