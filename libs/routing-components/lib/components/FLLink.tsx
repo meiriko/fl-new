@@ -1,6 +1,6 @@
 import {
   Box,
-  Link as ChkraLinkBase,
+  Link as ChkraLink,
   LinkProps as ChakraLinkProps,
 } from "@chakra-ui/react";
 import {
@@ -52,7 +52,7 @@ export function FLLink<TTo extends string | undefined>(
   if (typeof props.children === "function") {
     const { children, ...rest } = props;
     return (
-      <ChkraLinkBase
+      <ChkraLink
         as={(props: { children: LinkChildrenFN }) => {
           return <Box {...props} as={TanstackLink} children={children} />;
         }}
@@ -61,10 +61,7 @@ export function FLLink<TTo extends string | undefined>(
     );
   } else {
     return (
-      <ChkraLinkBase
-        as={TanstackLink}
-        {...(props as React.PropsWithChildren)}
-      />
+      <ChkraLink as={TanstackLink} {...(props as React.PropsWithChildren)} />
     );
   }
 }
