@@ -1,6 +1,7 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Outlet } from "@tanstack/react-router";
 import { addTabProps } from "@fl/routing";
 import { FLLinkTabs } from "@fl/routing-components";
+import { Box } from "@chakra-ui/react";
 
 const tabs = ["snake", "was", "here"] as const;
 
@@ -17,9 +18,9 @@ export const Route = createFileRoute("/miro/$miroId/$tabId")(
 function TabDisplay() {
   const params = Route.useParams();
   return (
-    <div>
-      <div>inside tab</div>
-      <div>{JSON.stringify(params, null, 2)}</div>
+    <Box>
+      <Box>inside tab</Box>
+      <Box>{JSON.stringify(params, null, 2)}</Box>
       <FLLinkTabs
         tabs={tabs}
         tabKey="tabId"
@@ -30,6 +31,7 @@ function TabDisplay() {
         //   size: { sm: "sm", md: "md", lg: "lg" },
         // }}
       />
-    </div>
+      <Outlet />
+    </Box>
   );
 }

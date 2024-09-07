@@ -94,6 +94,12 @@ function App() {
         <div style={{ display: "flex", gap: "1rem", padding: 20 }}>
           <FLLink to="/">Home</FLLink>
           <CustomLink
+            to="/miro/$miroId/$tabId/$segId"
+            params={{ miroId: "xx", tabId: "here", segId: "segment2" }}
+          >
+            Miro/tab/segment
+          </CustomLink>
+          <CustomLink
             to="/miro"
             _activeLink={{ fontWeight: "bold", color: "red.300" }}
           >
