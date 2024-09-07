@@ -49,10 +49,9 @@ function getWithKey(getter: (item: unknown, key: string) => unknown) {
   return (item: unknown, key: string) => [key, getter(item, key)];
 }
 
-type ConfigKeyType<T extends TabsConfig> =
-  T extends Record<string, TabEntry>
-    ? keyof T
-    : (T & TabConfig[])[number]["value"];
+type ConfigKeyType<T extends TabsConfig> = T extends Record<string, TabEntry>
+  ? keyof T
+  : (T & TabConfig[])[number]["value"];
 
 export function toTabs<T extends TabsConfig>(tabs: T): ConfigKeyType<T>[] {
   return _.map(tabs, getPropOrKey("value")) as ConfigKeyType<T>[];

@@ -18,8 +18,9 @@ type ToParamsObjectType<TTo extends string> = Extract<
   Record<string, unknown>
 >;
 
-type MakeRequired<T> =
-  T extends Record<string, unknown> ? { [K in keyof T]-?: T[K] } : T;
+type MakeRequired<T> = T extends Record<string, unknown>
+  ? { [K in keyof T]-?: T[K] }
+  : T;
 
 type ToParamsObjectOrReducer<T extends Record<string, unknown>> =
   | T
@@ -31,12 +32,12 @@ type ToParamsPropsType<TTo extends string | undefined> = TTo extends
   | "."
   ? { params?: ToParamsObjectOrReducer<Record<string, string>> }
   : ParsePathParams<TTo & string> extends never
-    ? { params?: never }
-    : {
-        params: ToParamsObjectOrReducer<
-          MakeRequired<ToParamsObjectType<TTo & string>>
-        >;
-      };
+  ? { params?: never }
+  : {
+      params: ToParamsObjectOrReducer<
+        MakeRequired<ToParamsObjectType<TTo & string>>
+      >;
+    };
 
 export type ChakraToTanstackLinkProps<TTo extends string | undefined> = Omit<
   Omit<TanstackLinkProps, "search" | "to"> &

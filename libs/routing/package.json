@@ -34,9 +34,8 @@
     "vite": "^5.4.1"
   },
   "peerDependencies": {
+    "@tanstack/react-router": "^1.53.1",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "lodash": "^4.17.21",
-    "@tanstack/react-router": "^1.53.1"
+    "react-dom": "^18.3.1"
   }
 }
