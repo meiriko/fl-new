@@ -1,6 +1,6 @@
-import { HStack, StackProps, Box, As } from "@chakra-ui/react";
-import { FLLink } from "./FLLink";
 import React from "react";
+import { HStack, Box, As } from "@chakra-ui/react";
+import { FLLink } from "./FLLink";
 
 const keepSearchFn = (search: Record<string, string>) => search;
 
@@ -10,18 +10,23 @@ type TabLinkProps = {
   children: React.ReactNode;
 };
 
-export function FLTabs<
-  ContainerPropsType extends object = StackProps,
-  LinkPropsType extends object = Omit<
-    React.ComponentProps<typeof FLLink>,
-    "children" | keyof TabLinkProps
-  >,
+type FLLinkProps = React.ComponentProps<typeof FLLink>;
+
+function DefaultTabLink(props: FLLinkProps) {
+  return (
+    <FLLink {...props} variant="tab" size={{ sm: "sm", md: "md", lg: "lg" }} />
+  );
+}
+
+export function FLLinkTabs<
+  ContainerPropsType,
+  LinkPropsType extends object = Omit<FLLinkProps, keyof TabLinkProps>
 >({
   tabs,
   tabKey,
   resetSearch = false,
   as = HStack,
-  linkRenderer: LinkRenderer = FLLink,
+  linkRenderer: LinkRenderer = DefaultTabLink,
   linkProps,
   ...containerProps
 }: {

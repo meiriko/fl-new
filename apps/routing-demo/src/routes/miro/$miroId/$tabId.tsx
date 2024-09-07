@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { addTabProps } from "@fl/routing";
-import { FLTabs } from "@fl/routing-components";
+import { FLLinkTabs } from "@fl/routing-components";
 
 const tabs = ["snake", "was", "here"] as const;
 
@@ -20,22 +20,15 @@ function TabDisplay() {
     <div>
       <div>inside tab</div>
       <div>{JSON.stringify(params, null, 2)}</div>
-      <FLTabs
+      <FLLinkTabs
         tabs={tabs}
         tabKey="tabId"
         h={10}
-        bg="gray.500"
         w="full"
-        justifyContent="space-between"
-        linkProps={{
-          color: "blue",
-          px: 8,
-          h: "full",
-          display: "flex",
-          alignItems: "center",
-          _activeLink: { color: "red", bg: "black" },
-          _hover: { bg: "gray.400" },
-        }}
+        // linkProps={{
+        //   variant: "tab",
+        //   size: { sm: "sm", md: "md", lg: "lg" },
+        // }}
       />
     </div>
   );

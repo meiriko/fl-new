@@ -1,2 +1,2 @@
 export * from "./FLLink";
-export * from "./FLTabs";
+export * from "./FLLinkTabs";
