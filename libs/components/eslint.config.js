@@ -20,7 +20,10 @@ export default tseslint.config(
     },
   },
   {
-    files: ["**/{stories,.storybook}/**/*.{js,jsx,ts,tsx}"],
+    files: [
+      "**/{stories,.storybook}/**/*.{js,jsx,ts,tsx}",
+      "apps/**/*.{js,jsx,ts,tsx}",
+    ],
     rules: {
       "no-restricted-imports": "off",
     },
