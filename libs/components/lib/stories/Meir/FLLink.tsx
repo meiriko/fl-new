@@ -59,14 +59,13 @@ function StyledFLLink(props: React.ComponentProps<typeof FLLink>) {
 
 function toNestedRoutes(parts: string[], getActiveOption: () => number) {
   return parts.reduce<PathConfig[]>((acc: PathConfig[], _, index: number) => {
-    const activeOption = getActiveOption();
     const name = parts[index];
     const subParts = parts.slice(0, index + 1);
-    const label = `[${subParts.map((part) => `${part} ${activeOption}`).join(" / ")}]`;
-    const path = subParts.map((part) => `$${part}Id`).join("/");
     const params = Object.fromEntries(
-      subParts.map((part) => [`${part}Id`, `${part}-${activeOption}`])
+      subParts.map((part) => [`${part}Id`, `${part}-${getActiveOption()}`])
     );
+    const label = Object.values(params).join(" / ");
+    const path = subParts.map((part) => `$${part}Id`).join("/");
     return [
       ...acc,
       {
@@ -87,7 +86,7 @@ const App = ({
   optionsCount: number;
 }) => {
   const partsConfig = useMemo(
-    () => toNestedRoutes(parts, () => 1 + Math.min(2, optionsCount - 1)),
+    () => toNestedRoutes(parts, () => 1 + Math.min(1, optionsCount - 1)),
     [optionsCount, parts]
   );
   const randomPartsConfig = useMemo(
