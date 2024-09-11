@@ -1,103 +1,46 @@
 import { Outlet } from "@tanstack/react-router";
-import {
-  Box,
-  Button,
-  ChakraProvider,
-  Tabs,
-  TabList,
-  TabPanels,
-  Tab,
-  TabPanel,
-} from "@chakra-ui/react";
+import { Box, ChakraProvider } from "@chakra-ui/react";
 import { FLLink } from "@fl/routing-components";
 import { theme } from "@fl/theme";
+import { useEffect, useState } from "react";
 
 function CustomLink<TTo extends string | undefined>(
   props: React.ComponentProps<typeof FLLink<TTo>>
 ) {
   return (
     <FLLink<TTo>
+      px={1}
       paddingInlineEnd={2}
       whiteSpace="nowrap"
       _activeLink={{ fontWeight: "bold", color: "yellow.300" }}
+      borderInlineEnd="1px solid red"
       {...props}
     />
   );
 }
 
 function App() {
-  if (!Math.random()) {
-    return (
-      <ChakraProvider theme={theme}>
-        <Box w="100vw" h="100vh" p={10} bg="white">
-          <Tabs variant="finaloopLine">
-            <TabList>
-              <Tab>One</Tab>
-              <Tab>Two</Tab>
-              <Tab>Three</Tab>
-            </TabList>
-
-            <TabPanels>
-              <TabPanel>
-                <p>one!</p>
-              </TabPanel>
-              <TabPanel>
-                <p>two!</p>
-              </TabPanel>
-              <TabPanel>
-                <p>three!</p>
-              </TabPanel>
-            </TabPanels>
-          </Tabs>
-        </Box>
-      </ChakraProvider>
-    );
-  }
-  if (!Math.random()) {
-    return (
-      <ChakraProvider theme={theme}>
-        <Box w="100vw" h="100vh" p={10}>
-          <Button>red</Button>
-          <Button variant="outline">outline</Button>
-          <Button variant="primary">primary</Button>
-          <Button variant="ghost">ghost</Button>
-          <Button variant="link" fontSize="sm">
-            link
-          </Button>
-          <Button variant="miro">miro</Button>
-        </Box>
-      </ChakraProvider>
-    );
-  }
-
+  console.log(">>>>> boooomzzz >>>>>");
+  const [dbg, setDbg] = useState("loading");
+  useEffect(() => {
+    fetch("https://get.geojs.io/v1/ip/country.json")
+      .then((v) => v.json())
+      .then((v) => {
+        console.log(">>> fetch: ", v);
+        setDbg(JSON.stringify(v));
+      });
+  }, []);
   return (
     <ChakraProvider theme={theme}>
-      <Box>
-        <Tabs variant="finaloopLine" size={{ sm: "sm", md: "md", lg: "lg" }}>
-          <TabList>
-            <Tab>One</Tab>
-            <Tab>Two</Tab>
-            <Tab>Three</Tab>
-          </TabList>
-          <TabPanels>
-            <TabPanel>
-              <p>one!</p>
-            </TabPanel>
-            <TabPanel>
-              <p>two!</p>
-            </TabPanel>
-            <TabPanel>
-              <p>three!</p>
-            </TabPanel>
-          </TabPanels>
-        </Tabs>
-        <div style={{ display: "flex", gap: "1rem", padding: 20 }}>
+      <Box w="full" h="full" p={6}>
+        <Box>dbg: {dbg}</Box>
+        <Box>
           <FLLink to="/">Home</FLLink>
           <CustomLink
             to="/miro/$miroId/$tabId/$segId"
             params={{ miroId: "xx", tabId: "here", segId: "segment2" }}
           >
-            Miro/tab/segment
+            Miro/xx/tab:here/segment:segment2
           </CustomLink>
           <CustomLink
             to="/miro"
@@ -109,28 +52,27 @@ function App() {
             to="/miro/$miroId/$tabId"
             params={{ miroId: "xx", tabId: "here" }}
           >
-            miro/xxx/xxx
+            miro/xx/tab:here
           </CustomLink>
           <CustomLink to="/miro/$miroId" params={{ miroId: "xxxx" }}>
-            Miro xxx
+            miro/xxxx
           </CustomLink>
           <CustomLink to="/miro/$miroId" params={{ miroId: "yyy" }}>
-            Miro yyy
+            miro/yyy
           </CustomLink>
           <CustomLink
             to="/miro/$miroId/$tabId"
             params={{ miroId: "yyy", tabId: "was" }}
           >
-            Miro yyy/was
+            miro/yyy/tab:was
           </CustomLink>
           <CustomLink
             to="/miro/$miroId/$tabId"
             params={{ miroId: "yyy", tabId: "here" }}
           >
-            Miro yyy/here
+            Miro yyy/tab:here
           </CustomLink>
-        </div>
-        <div>root (App)</div>
+        </Box>
         <Outlet />
       </Box>
     </ChakraProvider>
