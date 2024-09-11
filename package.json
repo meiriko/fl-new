@@ -7,8 +7,17 @@
   "type": "module",
   "workspaces": [
     "apps/*",
-    "libs/*"
+    "libs/*",
+    "e2e"
   ],
+  "scripts": {
+    "dev": "yarn workspace @fl/routing-demo dev",
+    "storybook": "yarn workspace @fl/components storybook",
+    "test": "yarn workspace @fl/e2e playwright test",
+    "test:ui": "yarn workspace @fl/e2e playwright test --ui",
+    "test:report": "yarn workspace @fl/e2e playwright show-report",
+    "test:codegen": "yarn workspace @fl/e2e playwright codegen"
+  },
   "devDependencies": {
     "@eslint/js": "^9.9.0",
     "@types/node": "^22.5.3",
