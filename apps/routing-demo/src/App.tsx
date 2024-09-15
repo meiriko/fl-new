@@ -1,8 +1,8 @@
-import { Outlet } from "@tanstack/react-router";
+import { Link, Outlet } from "@tanstack/react-router";
 import { Box, ChakraProvider } from "@chakra-ui/react";
 import { FLLink } from "@fl/routing-components";
 import { theme } from "@fl/theme";
-import { useEffect, useState } from "react";
+// import { useEffect, useState } from "react";
 
 function CustomLink<TTo extends string | undefined>(
   props: React.ComponentProps<typeof FLLink<TTo>>
@@ -20,21 +20,33 @@ function CustomLink<TTo extends string | undefined>(
 }
 
 function App() {
-  console.log(">>>>> boooomzzz >>>>>");
-  const [dbg, setDbg] = useState("loading");
-  useEffect(() => {
-    fetch("https://get.geojs.io/v1/ip/country.json")
-      .then((v) => v.json())
-      .then((v) => {
-        console.log(">>> fetch: ", v);
-        setDbg(JSON.stringify(v));
-      });
-  }, []);
+  // console.log(">>>>> boooomzzz >>>>>");
+  // const [dbg, setDbg] = useState("loading");
+  // useEffect(() => {
+  //   fetch("https://get.geojs.io/v1/ip/country.json")
+  //     .then((v) => v.json())
+  //     .then((v) => {
+  //       console.log(">>> fetch: ", v);
+  //       setDbg(JSON.stringify(v));
+  //     });
+  // }, []);
   return (
     <ChakraProvider theme={theme}>
       <Box w="full" h="full" p={6}>
-        <Box>dbg: {dbg}</Box>
+        {/* <Box>dbg: {dbg}</Box> */}
         <Box>
+          <CustomLink to="/welcome">auth</CustomLink>
+          <CustomLink to="/x/y">x/y</CustomLink>
+          <CustomLink to="/x/y" search={{ miro: "was" }}>
+            x/y?miro=was
+          </CustomLink>
+          <Link
+            style={{ margin: 20, border: "1px solid red" }}
+            to="/miro/$miroId/$tabId/$segId"
+            params={{ miroId: "xx", tabId: "here", segId: "segment2" }}
+          >
+            masked -- Miro/xx/tab:here/segment:segment2
+          </Link>
           <FLLink to="/">Home</FLLink>
           <CustomLink
             to="/miro/$miroId/$tabId/$segId"
