@@ -20,6 +20,7 @@ export const theme = extendTheme(
     colorScheme: "wood",
     components: [
       "Button",
+      "Input",
       "Tabs",
       "Radio",
       "RadioGroup",
