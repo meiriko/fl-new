@@ -13,6 +13,7 @@ import {
   AlertIcon,
   AlertTitle,
   AlertDescription,
+  useBoolean,
 } from "@chakra-ui/react";
 import { toInputFieldSetter } from "../../utils";
 
@@ -34,9 +35,11 @@ export function Auth0Login({
     passwordError: "",
   });
   const [formError, setFormError] = useState<string>();
+  const [isLoading, setIsLoading] = useBoolean(false);
 
   const doLogin = useCallback(
     async (email: string, password: string) => {
+      setIsLoading.on();
       setFormError(undefined);
       const auth = new WebAuth({
         domain: import.meta.env.VITE_AUTH0_DOMAIN,
@@ -58,10 +61,11 @@ export function Auth0Login({
         },
         (error: Auth0Error | null) => {
           setFormError(error?.description);
+          setIsLoading.off();
         }
       );
     },
-    [resume, redirectPath]
+    [resume, redirectPath, setIsLoading]
   );
 
   const onSubmit = useCallback(
@@ -114,7 +118,9 @@ export function Auth0Login({
         />
         <FormErrorMessage>{passwordError}</FormErrorMessage>
       </FormControl>
-      <Button type="submit">Login</Button>
+      <Button type="submit" isLoading={isLoading}>
+        Login
+      </Button>
       {formError ? (
         <Alert status="error">
           <AlertIcon />
