@@ -28,10 +28,10 @@ export function Auth0Login({
     { email, invalidEmail, emailError, password, passwordError },
     setValues,
   ] = useState({
-    email: "",
+    email: import.meta.env.VITE_DEFAULT_EMAIL ?? "",
     emailError: "",
     invalidEmail: false,
-    password: "",
+    password: import.meta.env.VITE_DEFAULT_PASSWORD ?? "",
     passwordError: "",
   });
   const [formError, setFormError] = useState<string>();
