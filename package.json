@@ -12,6 +12,8 @@
   ],
   "scripts": {
     "dev": "yarn workspace @fl/routing-demo dev",
+    "build": "yarn workspace @fl/routing-demo build",
+    "theme": "yarn workspace @fl/theme theme",
     "storybook": "yarn workspace @fl/components storybook",
     "test": "yarn workspace @fl/e2e playwright test",
     "test:ui": "yarn workspace @fl/e2e playwright test --ui",
