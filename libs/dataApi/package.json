@@ -8,7 +8,9 @@
     "lint": "eslint .",
     "codegen": "genql -S Date:string --endpoint https://gql-internal.finaloop.com --output ./lib/services/GraphQL/__generated__ --esm -H 'x-introspection-key: finaloopIntrospectionKey!'"
   },
-  "dependencies": {},
+  "dependencies": {
+    "@tanstack/react-query": "^5.56.2"
+  },
   "devDependencies": {
     "@eslint/js": "^9.9.0",
     "@genql/cli": "^6.3.3",
