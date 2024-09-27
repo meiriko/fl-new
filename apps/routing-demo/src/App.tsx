@@ -36,6 +36,7 @@ function App() {
         {/* <Box>dbg: {dbg}</Box> */}
         <Box>
           <CustomLink to="/welcome">auth</CustomLink>
+          <CustomLink to="/x">x</CustomLink>
           <CustomLink to="/x/y">x/y</CustomLink>
           <CustomLink to="/x/y" search={{ miro: "was" }}>
             x/y?miro=was
