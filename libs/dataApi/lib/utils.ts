@@ -1,4 +1,8 @@
-import { QueryGenqlSelection, Client } from "./services/GraphQL/__generated__";
+import {
+  QueryGenqlSelection,
+  Query,
+  Client,
+} from "./services/GraphQL/__generated__";
 
 type AtLeastOneField<T> = {
   [K in keyof T]: Required<Pick<T, K>>;
@@ -12,7 +16,7 @@ type RequiredKeys<T> = {
 type ProvidedRequiredAsOptional<
   Type,
   SubType extends Partial<Type> | undefined,
-> = Omit<Type, keyof SubType> & Partial<Pick<Type, keyof SubType & keyof Type>>;
+> = Partial<Pick<Type, keyof SubType & keyof Type>> & Omit<Type, keyof SubType>;
 
 type QueryInput<T> = T extends { __args: { input: infer U } } ? U : never;
 type QueryInputByKey<K extends keyof QueryGenqlSelection> = QueryInput<
@@ -24,15 +28,20 @@ export type QuerySelectionType<K extends keyof QueryGenqlSelection> = Omit<
   "__args"
 >;
 
-type ServiceArgs<
-  K extends keyof QueryGenqlSelection,
+export type ServiceArgs<
+  K extends keyof QueryGenqlSelection & keyof Query,
   S extends
     | Omit<Exclude<QueryGenqlSelection[K], undefined>, "__args">
     | undefined = undefined,
   I extends Partial<QueryInputByKey<K>> | undefined = undefined,
-> = S extends undefined
-  ? I extends object
-    ? Exclude<RequiredKeys<QueryInputByKey<K>>, keyof I> extends never
+> = keyof S extends never
+  ? keyof I extends never
+    ? [
+        input: QueryInputByKey<K>,
+        selection: AtLeastOneField<QuerySelectionType<K>>,
+        name?: string,
+      ]
+    : Exclude<RequiredKeys<QueryInputByKey<K>>, keyof I> extends never
       ? [
           // input?: ProvidedRequiredAsOptional<QueryInputByKey<K>, I>,
           input: Partial<QueryInputByKey<K>> | undefined,
@@ -44,13 +53,13 @@ type ServiceArgs<
           selection: AtLeastOneField<QuerySelectionType<K>>,
           name?: string,
         ]
-    : [
+  : keyof I extends never
+    ? [
         input: QueryInputByKey<K>,
-        selection: AtLeastOneField<QuerySelectionType<K>>,
+        selection?: QuerySelectionType<K> | undefined,
         name?: string,
       ]
-  : I extends object
-    ? Exclude<RequiredKeys<QueryInputByKey<K>>, keyof I> extends never
+    : Exclude<RequiredKeys<QueryInputByKey<K>>, keyof I> extends never
       ? [
           // input?: ProvidedRequiredAsOptional<QueryInputByKey<K>, I>,
           input?: Partial<QueryInputByKey<K>>,
@@ -59,21 +68,16 @@ type ServiceArgs<
         ]
       : [
           input: ProvidedRequiredAsOptional<QueryInputByKey<K>, I>,
-          selection: QuerySelectionType<K> | undefined,
+          selection?: QuerySelectionType<K> | undefined,
           name?: string,
-        ]
-    : [
-        input: QueryInputByKey<K>,
-        selection: QuerySelectionType<K> | undefined,
-        name?: string,
-      ];
+        ];
 
 async function runQueryOnClient<
-  K extends keyof QueryGenqlSelection,
+  K extends keyof QueryGenqlSelection & keyof Query,
   S extends
     | Omit<Exclude<QueryGenqlSelection[K], undefined>, "__args">
     | undefined,
-  I extends Partial<QueryInputByKey<K>> | undefined,
+  const I extends Partial<QueryInputByKey<K>> | undefined,
 >(
   client: Client,
   q: K,
@@ -82,7 +86,7 @@ async function runQueryOnClient<
     | undefined,
   defaultInput: I | undefined,
   [input, selection, name]: ServiceArgs<K, S, I>,
-) {
+): Promise<Query[K]> {
   const args = {
     __name: name,
     [q]: {
@@ -97,16 +101,16 @@ async function runQueryOnClient<
     },
   };
   const { [q]: result } = await client.query(args);
-  return result;
+  return result as Query[K];
 }
 
 export function toServiceFromClient(client: Client) {
   return function <
-    K extends keyof QueryGenqlSelection,
+    K extends keyof QueryGenqlSelection & keyof Query,
     S extends
       | Omit<Exclude<QueryGenqlSelection[K], undefined>, "__args">
       | undefined = undefined,
-    I extends Partial<QueryInputByKey<K>> | undefined = undefined,
+    const I extends Partial<QueryInputByKey<K>> | undefined = undefined,
   >(
     q: K,
     defaultSelection?: S &
@@ -126,7 +130,7 @@ export function toServiceFromClient(client: Client) {
 }
 
 export function toService<
-  K extends keyof QueryGenqlSelection,
+  K extends keyof QueryGenqlSelection & keyof Query,
   S extends
     | Omit<Exclude<QueryGenqlSelection[K], undefined>, "__args">
     | undefined = undefined,

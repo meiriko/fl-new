@@ -30,16 +30,21 @@ const vanillaChipCompanyId = "a85a932a-e826-424c-966e-6f5831ec47be";
 async function test() {
   const dbg1 = toService(
     "onboardingStatus",
-    { scope: true },
+    // { scope: true },
+    undefined,
     {
       // companyId: vanillaChipCompanyId,
-      scope: "INVENTORY",
+      // scope: "INVENTORY",
       companyId: vanillaChipCompanyId,
     },
   );
   const dbg1Res = await dbg1(
-    { companyId: vanillaChipCompanyId },
+    {
+      scope: "INVENTORY",
+      // companyId: vanillaChipCompanyId,
+    },
     // { scope: true },
+    undefined,
   );
   console.log(">>>> dbg1Res: ", dbg1Res);
 
