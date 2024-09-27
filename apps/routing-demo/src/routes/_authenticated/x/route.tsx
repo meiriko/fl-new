@@ -1,6 +1,6 @@
 import { createFileRoute, Outlet } from "@tanstack/react-router";
 import { toService } from "@fl/dataApi";
-import { useEffect, useState } from "react";
+import { useCallback, useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 // import _ from "lodash";
 
@@ -9,19 +9,57 @@ export const Route = createFileRoute("/_authenticated/x")({
 });
 
 const vanillaChipCompanyId = "a85a932a-e826-424c-966e-6f5831ec47be";
+if (!vanillaChipCompanyId) {
+  console.log("missing companyId");
+}
 
-const svcBase = toService(
+const onboardingStatusSvc = toService(
   "onboardingStatus",
   { status: true, scope: true, step: true },
-  { scope: "INVENTORY", companyId: vanillaChipCompanyId },
+  {
+    scope: "DASHBOARD",
+    companyId: vanillaChipCompanyId,
+  },
 );
 
-// const svc = _.ary(svcBase, 0);
-const svc = ({ queryKey }: { queryKey: string[] }) => {
-  const [_key, step] = queryKey;
-  console.log("fetch step: ", step);
-  return svcBase({ step });
-};
+onboardingStatusSvc(
+  {
+    scope: "INVENTORY",
+  },
+  { status: true },
+).then(console.log);
+
+function useSvcQuery<Q, R>(key: string, svc: (p: Q) => Promise<R>, q: Q) {
+  const queryFn = useCallback(
+    ({ queryKey: [_key, q] }: { queryKey: [string, Q] }) => {
+      console.log(`fetch ${JSON.stringify(q, null, 2)}`);
+      return svc(q);
+    },
+    [svc],
+  );
+  return useQuery({
+    queryKey: [key, q],
+    queryFn,
+  });
+}
+
+// const svc = _.ary(onboardingStatusSvc, 0);
+// const svc = ({ queryKey }: { queryKey: string[] }) => {
+//   const [_key, step] = queryKey;
+//   console.log("fetch step: ", step);
+//   return onboardingStatusSvc({ step });
+// };
+
+// function useSvcQuery<Q>(
+//   key: string,
+//   svc: (p: { queryKey: [string, Q] }) => Promise<any>,
+//   q: Q,
+// ) {
+//   return useQuery({
+//     queryKey: [key, q],
+//     queryFn: svc,
+//   });
+// }
 
 const steps = [
   "purchase",
@@ -37,12 +75,15 @@ const steps = [
 
 function XDisplay() {
   const [step, setStep] = useState(steps[0]);
-  const dbg = useQuery({
-    queryKey: ["dbg", step],
-    queryFn: svc,
+  const dbg = useSvcQuery("dbg2", onboardingStatusSvc, {
+    step,
+    // scope: "INVENTORY",
   });
+
   useEffect(() => {
-    console.log(">>> dbg >>>>> : ", JSON.parse(JSON.stringify(dbg)));
+    if (dbg.data?.[0]) {
+      console.log(">>>> data >>>>> ", dbg.data[0].step, dbg.data[0].status);
+    }
   }, [dbg]);
 
   return (
