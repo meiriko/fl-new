@@ -18,12 +18,12 @@ function mergeArrays(a1, a2) {
 export function mergeImportRestriction(configs, addedImportRestrictions) {
   const existingImportRestrictions = getRulesByName(
     configs,
-    "no-restricted-imports"
+    "no-restricted-imports",
   );
   return _.mergeWith(
     existingImportRestrictions,
     addedImportRestrictions,
-    mergeArrays
+    mergeArrays,
   );
 }
 
@@ -42,6 +42,19 @@ export default tseslint.config(
     },
     rules: {
       ...reactHooks.configs.recommended.rules,
+      "@typescript-eslint/no-unused-vars": [
+        "error",
+        {
+          vars: "all",
+          args: "after-used",
+          caughtErrors: "all",
+          ignoreRestSiblings: false,
+          reportUsedIgnorePattern: false,
+          argsIgnorePattern: "^_",
+          varsIgnorePattern: "^_",
+          caughtErrorsIgnorePattern: "^_",
+        },
+      ],
       "react-refresh/only-export-components": [
         "warn",
         { allowConstantExport: true },
@@ -58,5 +71,5 @@ export default tseslint.config(
         },
       ],
     },
-  }
+  },
 );
