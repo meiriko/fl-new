@@ -34,37 +34,37 @@ type ServiceArgs<
   ? I extends object
     ? Exclude<RequiredKeys<QueryInputByKey<K>>, keyof I> extends never
       ? [
-          selection: AtLeastOneField<QuerySelectionType<K>>,
           // input?: ProvidedRequiredAsOptional<QueryInputByKey<K>, I>,
-          input?: Partial<QueryInputByKey<K>>,
+          input: Partial<QueryInputByKey<K>> | undefined,
+          selection: AtLeastOneField<QuerySelectionType<K>>,
           name?: string,
         ]
       : [
-          selection: AtLeastOneField<QuerySelectionType<K>>,
           input: ProvidedRequiredAsOptional<QueryInputByKey<K>, I>,
+          selection: AtLeastOneField<QuerySelectionType<K>>,
           name?: string,
         ]
     : [
-        selection: AtLeastOneField<QuerySelectionType<K>>,
         input: QueryInputByKey<K>,
+        selection: AtLeastOneField<QuerySelectionType<K>>,
         name?: string,
       ]
   : I extends object
     ? Exclude<RequiredKeys<QueryInputByKey<K>>, keyof I> extends never
       ? [
-          selection?: QuerySelectionType<K>,
           // input?: ProvidedRequiredAsOptional<QueryInputByKey<K>, I>,
           input?: Partial<QueryInputByKey<K>>,
+          selection?: QuerySelectionType<K>,
           name?: string,
         ]
       : [
-          selection: QuerySelectionType<K> | undefined,
           input: ProvidedRequiredAsOptional<QueryInputByKey<K>, I>,
+          selection: QuerySelectionType<K> | undefined,
           name?: string,
         ]
     : [
-        selection: QuerySelectionType<K> | undefined,
         input: QueryInputByKey<K>,
+        selection: QuerySelectionType<K> | undefined,
         name?: string,
       ];
 
@@ -81,7 +81,7 @@ async function runQueryOnClient<
     | (S & Omit<Exclude<QueryGenqlSelection[K], undefined>, "__args">)
     | undefined,
   defaultInput: I | undefined,
-  [selection, input, name]: ServiceArgs<K, S, I>,
+  [input, selection, name]: ServiceArgs<K, S, I>,
 ) {
   const args = {
     __name: name,
