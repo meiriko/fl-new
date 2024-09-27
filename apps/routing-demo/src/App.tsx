@@ -5,7 +5,7 @@ import { theme } from "@fl/theme";
 // import { useEffect, useState } from "react";
 
 function CustomLink<TTo extends string | undefined>(
-  props: React.ComponentProps<typeof FLLink<TTo>>
+  props: React.ComponentProps<typeof FLLink<TTo>>,
 ) {
   return (
     <FLLink<TTo>
