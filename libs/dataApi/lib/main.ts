@@ -1,5 +1,13 @@
 import { createClient } from "./services/GraphQL/__generated__";
 import { toServiceFromClient } from "./utils.ts";
+import { useCallback, useMemo } from "react";
+import { useQuery } from "@tanstack/react-query";
+import type {
+  QueryKey,
+  QuerySelectionByKey,
+  QueryInputByKey,
+  ServiceArgs,
+} from "./utils.ts";
 
 export const client = createClient({
   url: import.meta.env.VITE_FINALOOP_GQL || "https://gql.finaloop.com",
@@ -24,6 +32,42 @@ export const client = createClient({
 });
 
 export const toService = toServiceFromClient(client);
+
+export function useSvcQuery<
+  K extends QueryKey,
+  S extends QuerySelectionByKey<K>,
+  const I extends Partial<QueryInputByKey<K>> | undefined,
+  A extends ServiceArgs<K, S, I> = ServiceArgs<K, S, I>,
+  Q extends A[0] = A[0],
+>(qKey: K, key: string, selection: S, input: I, q?: Q) {
+  const queryFn = useMemo(() => {
+    const baseSvc = toService(qKey, selection, input);
+    return ({ queryKey: [_key, q] }: { queryKey: [string, Q?] }) => {
+      console.log(`fetch ${JSON.stringify(q, null, 2)}`);
+      return baseSvc(...([q] as unknown as A));
+    };
+  }, [qKey, selection, input]);
+
+  return useQuery({
+    queryKey: [key, q],
+    queryFn,
+  });
+}
+
+export function useQueryFromSvc<Q, R>(
+  key: string,
+  svc: (p: Q) => Promise<R>,
+  q: Q,
+) {
+  const queryFn = useCallback(
+    ({ queryKey: [_key, q] }: { queryKey: [string, Q] }) => svc(q),
+    [svc],
+  );
+  return useQuery({
+    queryKey: [key, q],
+    queryFn,
+  });
+}
 
 /*
 const vanillaChipCompanyId = "a85a932a-e826-424c-966e-6f5831ec47be";
