@@ -1,6 +1,9 @@
 import { createFileRoute, Outlet } from "@tanstack/react-router";
-import { useSvcQuery } from "@fl/dataApi";
-import { useState, useEffect } from "react";
+import { useSvcQuery, toMutation } from "@fl/dataApi";
+import { useCallback } from "react";
+import { Box, Button, HStack, VStack } from "@chakra-ui/react";
+import { useQueryClient } from "@tanstack/react-query";
+import { OnboardingStatus } from "@fl/dataApi/lib/services/GraphQL/__generated__";
 
 export const Route = createFileRoute("/_authenticated/x")({
   component: XDisplay,
@@ -15,61 +18,94 @@ export const Route = createFileRoute("/_authenticated/x")({
 
 const vanillaChipCompanyId = "a85a932a-e826-424c-966e-6f5831ec47be";
 
-const steps = [
-  "purchase",
-  "intro",
-  "setup",
-  "vendor-balance",
-  "recipes",
-  "review",
-  "unit-based-tracking-welcome",
-  "balance",
-  "warehouse-transfer",
-];
-
 const selection = { status: true, scope: true, step: true };
 const input = {
   scope: "INVENTORY",
   companyId: vanillaChipCompanyId,
 } as const;
 
-function XDisplay() {
-  const [step, setStep] = useState(steps[0]);
+const updateStep = toMutation("updateOnboardingStatus", selection, input);
 
-  const dbg = useSvcQuery("onboardingStatus", "dbg4", selection, input, {
-    step,
-    // scope: "INVENTORY",
-  });
-
-  useEffect(() => {
-    if (dbg.data?.length) {
-      console.log(
-        ">>>> data >>>>> ",
-        dbg.data?.length,
-        dbg.data?.find(({ step: currStep }) => currStep === step),
-      );
-    } else {
-      console.log("** wtf ** ", dbg.data);
-    }
-  }, [dbg, step]);
+function StepDisplay({
+  step,
+  queryKey,
+}: {
+  step: OnboardingStatus;
+  queryKey: string[];
+}) {
+  const client = useQueryClient();
+  const invalidate = useCallback(
+    () => client.invalidateQueries({ queryKey }),
+    [queryKey],
+  );
 
   return (
-    <div>
-      <div>Hello /_authenticated/welcome/x!</div>
-      <div style={{ margin: "20px 5px" }}>
-        <div style={{ marginBottom: 10 }}>step: {step}</div>
-        <label>
-          steps:
-          <select onChange={(e) => setStep(e.target.value)}>
-            {steps.map((step) => (
-              <option value={step} key={step}>
-                {step}
-              </option>
-            ))}
-          </select>
-        </label>
-      </div>
-      <Outlet />
-    </div>
+    <HStack
+      w="full"
+      color={step.status === "PENDING" ? "red.500" : "green.500"}
+      bg={step.status === "PENDING" ? "red.50" : "green.50"}
+      gap={4}
+      px={2}
+      py={4}
+      borderBottom="1px"
+      borderColor="gray.300"
+      _hover={{ bg: step.status === "PENDING" ? "red.100" : "green.100" }}
+    >
+      <Button
+        isDisabled={step.status === "PENDING"}
+        onClick={() => {
+          updateStep({ step: step.step, status: "PENDING" }).then(invalidate);
+        }}
+      >
+        pending
+      </Button>
+      <Button
+        isDisabled={step.status === "COMPLETED"}
+        onClick={() => {
+          updateStep({ step: step.step, status: "COMPLETED" }).then(invalidate);
+        }}
+      >
+        completed
+      </Button>
+      <Button
+        variant={step.status === "PENDING" ? "primary" : "secondary"}
+        onClick={() => {
+          const status = step.status === "PENDING" ? "COMPLETED" : "PENDING";
+          updateStep({ step: step.step, status }).then(invalidate);
+        }}
+      >
+        toggle
+      </Button>
+      <Box>
+        {step.step} = {step.status}
+      </Box>
+    </HStack>
+  );
+}
+
+function XDisplay() {
+  const queryKey = "onboardingStatus";
+
+  const queryResponse = useSvcQuery(
+    "onboardingStatus",
+    queryKey,
+    selection,
+    input,
+    // {
+    //   step,
+    //   // scope: "INVENTORY",
+    // },
+  );
+
+  return (
+    <VStack w="full" align="start" mb={10} gap={0}>
+      <Box>Hello /_authenticated/welcome/x!</Box>
+      {queryResponse.data?.map((step) => (
+        <StepDisplay key={step.step} step={step} queryKey={[queryKey]} />
+      ))}
+      <Box mt={6}>
+        <Outlet />
+      </Box>
+    </VStack>
   );
 }
