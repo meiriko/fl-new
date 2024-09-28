@@ -1,12 +1,12 @@
 import { createClient } from "./services/GraphQL/__generated__";
-import { toServiceFromClient } from "./utils.ts";
+import { toMutationFromClient, toQueryFromClient } from "./utils.ts";
 import { useCallback, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import type {
   QueryKey,
   QuerySelectionByKey,
   QueryInputByKey,
-  ServiceArgs,
+  QueryArgs,
 } from "./utils.ts";
 
 export const client = createClient({
@@ -31,13 +31,14 @@ export const client = createClient({
   },
 });
 
-export const toService = toServiceFromClient(client);
+export const toService = toQueryFromClient(client);
+export const toMutation = toMutationFromClient(client);
 
 export function useSvcQuery<
   K extends QueryKey,
   S extends QuerySelectionByKey<K>,
   const I extends Partial<QueryInputByKey<K>> | undefined,
-  A extends ServiceArgs<K, S, I> = ServiceArgs<K, S, I>,
+  A extends QueryArgs<K, S, I> = QueryArgs<K, S, I>,
   Q extends A[0] = A[0],
 >(qKey: K, key: string, selection: S, input: I, q?: Q) {
   const queryFn = useMemo(() => {
