@@ -1,47 +1,10 @@
 import { createFileRoute, Outlet } from "@tanstack/react-router";
-import { toService } from "@fl/dataApi";
-import { useCallback, useState, useEffect } from "react";
-import { useQuery } from "@tanstack/react-query";
-// import _ from "lodash";
+import { useSvcQuery } from "@fl/dataApi";
+import { useState, useEffect } from "react";
 
 export const Route = createFileRoute("/_authenticated/x")({
   component: XDisplay,
 });
-
-const vanillaChipCompanyId = "a85a932a-e826-424c-966e-6f5831ec47be";
-if (!vanillaChipCompanyId) {
-  console.log("missing companyId");
-}
-
-const onboardingStatusSvc = toService(
-  "onboardingStatus",
-  { status: true, scope: true, step: true },
-  {
-    scope: "DASHBOARD",
-    companyId: vanillaChipCompanyId,
-  },
-);
-
-onboardingStatusSvc(
-  {
-    scope: "INVENTORY",
-  },
-  { status: true },
-).then(console.log);
-
-function useSvcQuery<Q, R>(key: string, svc: (p: Q) => Promise<R>, q: Q) {
-  const queryFn = useCallback(
-    ({ queryKey: [_key, q] }: { queryKey: [string, Q] }) => {
-      console.log(`fetch ${JSON.stringify(q, null, 2)}`);
-      return svc(q);
-    },
-    [svc],
-  );
-  return useQuery({
-    queryKey: [key, q],
-    queryFn,
-  });
-}
 
 // const svc = _.ary(onboardingStatusSvc, 0);
 // const svc = ({ queryKey }: { queryKey: string[] }) => {
@@ -50,16 +13,7 @@ function useSvcQuery<Q, R>(key: string, svc: (p: Q) => Promise<R>, q: Q) {
 //   return onboardingStatusSvc({ step });
 // };
 
-// function useSvcQuery<Q>(
-//   key: string,
-//   svc: (p: { queryKey: [string, Q] }) => Promise<any>,
-//   q: Q,
-// ) {
-//   return useQuery({
-//     queryKey: [key, q],
-//     queryFn: svc,
-//   });
-// }
+const vanillaChipCompanyId = "a85a932a-e826-424c-966e-6f5831ec47be";
 
 const steps = [
   "purchase",
@@ -73,18 +27,31 @@ const steps = [
   "warehouse-transfer",
 ];
 
+const selection = { status: true, scope: true, step: true };
+const input = {
+  scope: "INVENTORY",
+  companyId: vanillaChipCompanyId,
+} as const;
+
 function XDisplay() {
   const [step, setStep] = useState(steps[0]);
-  const dbg = useSvcQuery("dbg2", onboardingStatusSvc, {
+
+  const dbg = useSvcQuery("onboardingStatus", "dbg4", selection, input, {
     step,
     // scope: "INVENTORY",
   });
 
   useEffect(() => {
-    if (dbg.data?.[0]) {
-      console.log(">>>> data >>>>> ", dbg.data[0].step, dbg.data[0].status);
+    if (dbg.data?.length) {
+      console.log(
+        ">>>> data >>>>> ",
+        dbg.data?.length,
+        dbg.data?.find(({ step: currStep }) => currStep === step),
+      );
+    } else {
+      console.log("** wtf ** ", dbg.data);
     }
-  }, [dbg]);
+  }, [dbg, step]);
 
   return (
     <div>

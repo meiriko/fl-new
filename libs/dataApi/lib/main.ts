@@ -42,10 +42,8 @@ export function useSvcQuery<
 >(qKey: K, key: string, selection: S, input: I, q?: Q) {
   const queryFn = useMemo(() => {
     const baseSvc = toService(qKey, selection, input);
-    return ({ queryKey: [_key, q] }: { queryKey: [string, Q?] }) => {
-      console.log(`fetch ${JSON.stringify(q, null, 2)}`);
-      return baseSvc(...([q] as unknown as A));
-    };
+    return ({ queryKey: [_key, q] }: { queryKey: [string, Q?] }) =>
+      baseSvc(...([q] as unknown as A));
   }, [qKey, selection, input]);
 
   return useQuery({
